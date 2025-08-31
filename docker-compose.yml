@@ -1,0 +1,34 @@
+services:
+  frontend:
+    image: week6-nextjs-project-server
+    build : 
+      context: ./week6-nextjs-project
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_TASKMANAGER_URL=http://backend:2020 
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  backend:
+    image: nodejs-week4-uptick-backend
+    build: 
+      context: ./week4-uptik
+    ports:
+      - "2020:2020"
+    environment:
+      - MONGO_URI=${MONGO_URI}
+      - NODE_ENV=production
+      - JWT_SECRET=${JWT_SECRET}
+      - PORT=2020
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
